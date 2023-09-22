@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go, Echo, HTMX, and Alpine.js App</title>
+    <!-- Include Alpine.js and HTMX libraries -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js"
+      defer
+    ></script>
+    <script src="https://unpkg.com/htmx.org@1.6.0/dist/htmx.js"></script>
+  </head>
+  <body>
+    <h1>Task List</h1>
+
+    <!-- Task Input Form -->
+    <form hx-post="/add-task" hx-trigger="submit" hx-swap="outerHTML">
+      <input
+        type="text"
+        id="taskName"
+        name="taskName"
+        placeholder="Enter task name"
+        required
+      />
+      <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Task List -->
+    <ul>
+      <!-- HTMX will replace this list with updated content -->
+      <li hx-get="/tasks" hx-trigger="load">Loading tasks...</li>
+    </ul>
+
+    <!-- HTMX Target for Task List -->
+    <div id="taskList" style="display: none"></div>
+
+    <script>
+      // HTMX event handler for successful form submission
+      document.body.addEventListener("htmx:afterSwap", function (event) {
+        if (event.detail.trigger === "submit") {
+          document.getElementById("taskName").value = ""; // Clear the input field
+        }
+      });
+    </script>
+  </body>
+</html>
