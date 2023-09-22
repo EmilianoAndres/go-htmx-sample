@@ -29,6 +29,8 @@ func NewTaskHandler(taskService app.TaskService) *TaskHandler {
 // Define HTTP handlers for tasks, e.g., CreateTask, GetTask, GetAllTasks, UpdateTask, DeleteTask
 // Example:
 func (h *TaskHandler) CreateTask(c echo.Context) error {
+	taskId := c.FormValue("taskName")
+	print(taskId)
 	// Parse request, call service method, and handle response
 	return c.JSON(http.StatusCreated, struct{}{})
 }
@@ -36,5 +38,5 @@ func (h *TaskHandler) CreateTask(c echo.Context) error {
 func (h *TaskHandler) GetAllTasks(c echo.Context) error {
 	tasks, _ := h.taskService.GetAllTasks()
 
-	return c.JSON(http.StatusOK, tasks)
+	return c.Render(http.StatusOK, "list.html", map[string]interface{}{"tasks": tasks})
 }

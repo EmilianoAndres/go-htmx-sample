@@ -25,10 +25,10 @@ func (r DefaultTaskRepository) Create(task domain.Task) error {
 
 func (r DefaultTaskRepository) GetAll() ([]domain.Task, error) {
 	return []domain.Task{{
-		ID:   1,
+		Id:   1,
 		Name: "Task 1",
 	}, {
-		ID:   2,
+		Id:   2,
 		Name: "Task 2",
 	}}, nil
 }

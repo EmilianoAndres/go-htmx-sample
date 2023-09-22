@@ -15,7 +15,7 @@
     <h1>Task List</h1>
 
     <!-- Task Input Form -->
-    <form hx-post="/add-task" hx-trigger="submit" hx-swap="outerHTML">
+    <form hx-post="/create" hx-trigger="submit" hx-swap="outerHTML">
       <input
         type="text"
         id="taskName"
@@ -31,17 +31,5 @@
       <!-- HTMX will replace this list with updated content -->
       <li hx-get="/tasks" hx-trigger="load">Loading tasks...</li>
     </ul>
-
-    <!-- HTMX Target for Task List -->
-    <div id="taskList" style="display: none"></div>
-
-    <script>
-      // HTMX event handler for successful form submission
-      document.body.addEventListener("htmx:afterSwap", function (event) {
-        if (event.detail.trigger === "submit") {
-          document.getElementById("taskName").value = ""; // Clear the input field
-        }
-      });
-    </script>
   </body>
 </html>
