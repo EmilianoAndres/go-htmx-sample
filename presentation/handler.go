@@ -14,7 +14,6 @@ func NewDefaultHomeHandler() HomeHandler {
 }
 
 func (h HomeHandler) ShowHome(c echo.Context) error {
-	print("test")
 	return c.Render(http.StatusOK, "index.html", nil)
 }
 
@@ -26,17 +25,19 @@ func NewTaskHandler(taskService app.TaskService) *TaskHandler {
 	return &TaskHandler{taskService}
 }
 
-// Define HTTP handlers for tasks, e.g., CreateTask, GetTask, GetAllTasks, UpdateTask, DeleteTask
-// Example:
 func (h *TaskHandler) CreateTask(c echo.Context) error {
-	taskId := c.FormValue("taskName")
-	print(taskId)
-	// Parse request, call service method, and handle response
-	return c.JSON(http.StatusCreated, struct{}{})
+	taskName := c.FormValue("taskName")
+
+	task, _ := h.taskService.CreateTask(taskName)
+
+	// add custom header to trigger DOM event
+	c.Response().Header().Set("HX-Trigger", "newTask")
+
+	return c.Render(http.StatusCreated, "element.html", task)
 }
 
 func (h *TaskHandler) GetAllTasks(c echo.Context) error {
 	tasks, _ := h.taskService.GetAllTasks()
 
-	return c.Render(http.StatusOK, "list.html", map[string]interface{}{"tasks": tasks})
+	return c.Render(http.StatusOK, "list.html", tasks)
 }

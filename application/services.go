@@ -7,7 +7,7 @@ import (
 
 // TaskService defines the interface for task-related business logic.
 type TaskService interface {
-	CreateTask(name string) error
+	CreateTask(name string) (domain.Task, error)
 	// GetTaskByID(id int) (*domain.Task, error)
 	GetAllTasks() ([]domain.Task, error)
 	// UpdateTask(task *domain.Task) error
@@ -25,9 +25,10 @@ func NewTaskService(taskRepo infrastructure.TaskRepository) DefaultTaskService {
 	}
 }
 
-func (s DefaultTaskService) CreateTask(name string) error {
-	print(name)
-	return nil
+func (s DefaultTaskService) CreateTask(name string) (domain.Task, error) {
+	task := domain.Task{Name: name}
+	task, err := s.taskRepo.Create(task)
+	return task, err
 }
 
 func (s DefaultTaskService) GetAllTasks() ([]domain.Task, error) {

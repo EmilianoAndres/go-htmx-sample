@@ -10,21 +10,22 @@ import (
 	"github.com/go-htmx-sample/application"
 	"github.com/go-htmx-sample/infrastructure"
 	handlers "github.com/go-htmx-sample/presentation"
+	"github.com/go-htmx-sample/support/database"
 	"github.com/labstack/echo/v4"
 )
 
 // CreateRouter creates a GIN router
-func CreateRouter() *echo.Echo {
+func CreateRouter(redis database.RedisClient) *echo.Echo {
 	router := echo.New()
 
 	// extra configuration
 
-	configureMappings(router)
+	configureMappings(router, redis)
 
 	return router
 }
 
-func configureMappings(e *echo.Echo) {
+func configureMappings(e *echo.Echo, redis database.RedisClient) {
 
 	// Template Parsing by domain
 	t := &Template{
@@ -35,7 +36,7 @@ func configureMappings(e *echo.Echo) {
 	e.Renderer = t
 
 	// Repository
-	taskRepository := infrastructure.NewDefaultTaskRepository()
+	taskRepository := infrastructure.NewDefaultTaskRepository(redis)
 	// Services
 	taskService := application.NewTaskService(taskRepository)
 	// Handlers

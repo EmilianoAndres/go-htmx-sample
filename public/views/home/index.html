@@ -15,21 +15,30 @@
     <h1>Task List</h1>
 
     <!-- Task Input Form -->
-    <form hx-post="/create" hx-trigger="submit" hx-swap="outerHTML">
+    <form
+      id="taskForm"
+      hx-post="/create"
+      hx-on::after-request="this.reset()"
+      hx-swap="none"
+    >
       <input
         type="text"
-        id="taskName"
         name="taskName"
         placeholder="Enter task name"
         required
       />
-      <button type="submit">Add Task</button>
+      <button
+        type="submit"
+        form="taskForm"
+        hx-select="#taskList"
+        hx-swap="beforeend"
+      >
+        Add Task
+      </button>
     </form>
 
-    <!-- Task List -->
-    <ul>
-      <!-- HTMX will replace this list with updated content -->
-      <li hx-get="/tasks" hx-trigger="load">Loading tasks...</li>
-    </ul>
+    <div id="taskList">
+      <ol hx-get="/tasks" hx-trigger="load, newTask from:body"></ol>
+    </div>
   </body>
 </html>
